@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# Initialize default option variables if applicable
-
 # Function to print a line of a specified character
 print_separator() {
     local length=$1
@@ -14,16 +12,62 @@ print_separator() {
 
 # Function to display script usage
 usage() {
-    echo "Usage: bash $0 [-u] [-t] [-r] [-h | -l] <file1> <file2>"
+    echo "Usage: bash $0 [-h] [-o dir_name] [-t #,#...] [-r <file>] [-v F|X] [-m] [-l] <file1> <file2>"
+    echo
     echo "Options:"
-    echo "  -u               Displays this usage message"
-    echo "  -t strings       Generate a FASTA file with translated sequences for specified reading frame(s),"
-    echo "                   1, 2, 3, -1, -2, -3, and 6 for allsix frames (default [1])"
-    echo "  -r string        Provide a reference FASTA/Q file to map sequences to and extract variable region"
-    echo "  -h               Generate residue enrichment heatmap for the variable region (constant length only)"
-    echo "  -l               Generate histogram of the variable region length distribution (variable length only)"
+    echo "  -h, --help                    Displays this help message"
+    echo "  -o, --output_dir string       Provide a name for the output directory. Cannot begin with '-'. Default is <filename>_analysis"
+    echo "  -t, --translate strings       Generate <filename>_translated.fasta with translated sequences for specified reading frame(s),"
+    echo "                                1, 2, 3, -1, -2, -3, and 6 for all six frames (default [1]). 'clean' must be used with"
+    echo "                                '--heatmap', '--length-dist', or '--reference' and will only output sequences used for analysis"
+    echo "  -r, --reference string        Provide a reference FASTA/Q file to filter translated sequences by similarity"
+    echo "  -v, --variable string         Generate FASTA or XLSX file containing isolated variable region sequences  Specify"
+    echo "                                output file type with 'F' or 'X' argument. Must be used with '--reference'"
+    echo "  -m, --heatmap                 Generate residue enrichment heatmap for the variable region. If input files contain"
+    echo "                                sequences with variable length, heatmap will only be generated for sequences with"
+    echo "                                same variable region length as the reference sequence. Must be used with '--reference'"
+    echo "  -l, --length_dist             Generate histogram of the variable region length distribution. Must be used with '--reference'"
+    echo
     exit 1
 }
+
+# Function to display script help message
+show_help() {
+    echo "This script provides basic statistics on Next-Generation Sequencing (NGS) data generated from site-directed mutagenesis "
+    echo "libraries. These stats include the total number of sequences, the average length of the sequences, and more. Sequences"
+    echo "with unidentified nucleotides are removed from the dataset. Sequences are translated and those with stop codons and"
+    echo "sequencing artifacts are removed from the dataset."
+    echo
+    echo "Two paths to fastq.gz files are expected as arguments: one for the forward reads and one for the reverse reads. The path"
+    echo "to the forward reads (filename with R1) should be first while the path to the reverse reads (filename with R2) should be second."
+    echo
+    echo "The '--translate' option allows files to be generated containing protein sequences for specified reading frames without filtering."
+    echo
+    echo "By using the other available options and providing a reference sequence, additional analysis can be performed such as residue"
+    echo "enrichment heatmaps and length distibution historgams."
+    echo
+    echo "If an option is selected that generates a file, a directory titled <filename>_analysis will be created to store the generated file(s)."
+    echo
+    echo "Usage: bash $0 [-h] [-o dir_name] [-t #,#...] [-r <file>] [-v F|X] [-m] [-l] <file1> <file2>"
+    echo
+    echo "Options:"
+    echo "  -h, --help                    Displays this help message"
+    echo "  -o, --output_dir string       Provide a name for the output directory. Cannot begin with '-'. Default is <filename>_analysis"
+    echo "  -t, --translate strings       Generate <filename>_translated.fasta with translated sequences for specified reading frame(s),"
+    echo "                                1, 2, 3, -1, -2, -3, and 6 for all six frames (default [1]). 'clean' must be used with"
+    echo "                                '--heatmap', '--length-dist', or '--reference' and will only output sequences used for analysis"
+    echo "  -r, --reference string        Provide a reference FASTA/Q file to filter translated sequences by similarity"
+    echo "  -v, --variable string         Generate FASTA or XLSX file containing isolated variable region sequences  Specify"
+    echo "                                output file type with 'F' or 'X' argument. Must be used with '--reference'"
+    echo "  -m, --heatmap                 Generate residue enrichment heatmap for the variable region. If input files contain"
+    echo "                                sequences with variable length, heatmap will only be generated for sequences with"
+    echo "                                same variable region length as the reference sequence. Must be used with '--reference'"
+    echo "  -l, --length_dist             Generate histogram of the variable region length distribution. Must be used with '--reference'"
+    echo
+    exit 1
+}
+
+# Initialize default option variables if applicable
 
 # Parse command-line options
 while getopts "hlu" opt; do
