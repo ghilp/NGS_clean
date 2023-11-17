@@ -101,43 +101,23 @@ while [ : ]; do
         -t|--translate)     # Executes code to translate specified reading frames, takes optional argument
             translate=true
             case "$2" in
-                *([1-3]|-[1-3]) )   # Single numbers
-                    frames="$2"
+                x|X)
+                    t_file_type="$2"
                     shift
                     ;;
-                *([1-3]|-[1-3]),*([1-3]|-[1-3]) )   # Combinations of 2 numbers
-                    frames="$2"
+                f|F)
+                    t_file_type="$2"
                     shift
                     ;;
-                *([1-3]|-[1-3]),*([1-3]|-[1-3]),*([1-3]|-[1-3]) )   # Combinations of 3 numbers
-                    frames="$2"
-                    shift
+                -?*)        # Matches if option is found after -t, set default file type
+                    t_file_type=X
                     ;;
-                *([1-3]|-[1-3]),*([1-3]|-[1-3]),*([1-3]|-[1-3]),*([1-3]|-[1-3]) )   # Combinations of 4 numbers
-                    frames="$2"
-                    shift
+                *.gz)       # Matches if .gz file is found after -t, set default file type
+                    t_file_type=X
                     ;;
-                *([1-3]|-[1-3]),*([1-3]|-[1-3]),*([1-3]|-[1-3]),*([1-3]|-[1-3]),*([1-3]|-[1-3]) )   # Combinations of 5 numbers
-                    frames="$2"
-                    shift
-                    ;;
-                *([1-3]|-[1-3]),*([1-3]|-[1-3]),*([1-3]|-[1-3]),*([1-3]|-[1-3]),*([1-3]|-[1-3]),*([1-3]|-[1-3]) )   # Combinations of 6 numbers
-                    frames="$2"
-                    shift
-                    ;;
-                clean|6)    # Matches 6 or clean argumetnts
-                    frames="$2"
-                    shift
-                    ;;
-                -?*)       # Matches if option is found after -t, set default frame
-                    frames=1
-                    ;;
-                *.gz)      # Matches if .gz file is found after -t, set default frame
-                    frames=1
-                    ;;
-                *)          # Default case for no specified reading frame(s)
+                *)          # Default case: matches if unexpected argument is found after -t
+                    t_file_type=X
                     printf "Warning: Invalid argument for '--translate' (ignored): %s\n" "$2" >&2
-                    frames=1
                     shift
                     ;;
             esac
@@ -177,13 +157,13 @@ while [ : ]; do
                     var_file_type="$2"
                     shift
                     ;;
-                -?*)
+                -?*)        # Matches if option is found after -v, set default file type
                     var_file_type=X
                     ;;
-                *.gz)
+                *.gz)       # Matches if .gz file is found after -v, set default file type
                     var_file_type=X
                     ;;
-                *)
+                *)          # Default case: matches if unexpected argument is found after -v
                     var_file_type=X
                     printf "Warning: Invalid argument (ignored): %s\n" "$2" >&2
                     shift
