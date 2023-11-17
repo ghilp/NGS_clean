@@ -49,7 +49,7 @@ show_help() {
     echo
     echo "If an option is selected that generates a file, a directory titled <filename>_analysis will be created to store the generated file(s)."
     echo
-    echo "Usage: bash $0 [-h] [-o dir_name] [-t #,#...] [-r <file>] [-v F|X] [-m] [-l] <file1> <file2>"
+    echo "Usage: bash $0 [-h] [-o dir_name] [-t F|X] [-v F|X] [-r <file>] [-m] [-l] <file1> <file2>"
     echo
     echo "Options:"
     echo "  -h, --help                    Displays this help message"
