@@ -67,20 +67,157 @@ show_help() {
     exit 1
 }
 
+# Function to print to stderr
+die() {
+    printf '%s\n' "$1" >&2
+    exit 1
+}
+
+# Enable extended globbing
+shopt -s extglob
+
 # Initialize default option variables if applicable
 
-# Parse command-line options
-while getopts "hlu" opt; do
-    case $opt in
-        h) heatmap=true ;;
-        l) length_dist=true ;;
-        u) usage ;;
-        \?) echo "Invalid option: -$OPTARG" >&2; usage ;;
-    esac
-done
+heatmap=false
+length_dist=false
+translate=false
+variable=false
+reference=false
+output_dir=false
 
-# Shift to next set of arguments (skip processed options)
-shift $((OPTIND-1))
+# Loop to parse command line options
+while [ : ]; do
+    case "$1" in
+        -h|--help)          # Displays usage message
+            show_help
+            exit
+            ;;
+        -l|--length_dist)   # Executes code to generate histogram
+            length_dist=true
+            ;;
+        -m|--heatmap)       # Executes code to generate heatmap
+            heatmap=true
+            ;;
+        -t|--translate)     # Executes code to translate specified reading frames, takes optional argument
+            translate=true
+            case "$2" in
+                *([1-3]|-[1-3]) )   # Single numbers
+                    frames="$2"
+                    shift
+                    ;;
+                *([1-3]|-[1-3]),*([1-3]|-[1-3]) )   # Combinations of 2 numbers
+                    frames="$2"
+                    shift
+                    ;;
+                *([1-3]|-[1-3]),*([1-3]|-[1-3]),*([1-3]|-[1-3]) )   # Combinations of 3 numbers
+                    frames="$2"
+                    shift
+                    ;;
+                *([1-3]|-[1-3]),*([1-3]|-[1-3]),*([1-3]|-[1-3]),*([1-3]|-[1-3]) )   # Combinations of 4 numbers
+                    frames="$2"
+                    shift
+                    ;;
+                *([1-3]|-[1-3]),*([1-3]|-[1-3]),*([1-3]|-[1-3]),*([1-3]|-[1-3]),*([1-3]|-[1-3]) )   # Combinations of 5 numbers
+                    frames="$2"
+                    shift
+                    ;;
+                *([1-3]|-[1-3]),*([1-3]|-[1-3]),*([1-3]|-[1-3]),*([1-3]|-[1-3]),*([1-3]|-[1-3]),*([1-3]|-[1-3]) )   # Combinations of 6 numbers
+                    frames="$2"
+                    shift
+                    ;;
+                clean|6)    # Matches 6 or clean argumetnts
+                    frames="$2"
+                    shift
+                    ;;
+                -?*)       # Matches if option is found after -t, set default frame
+                    frames=1
+                    ;;
+                *.gz)      # Matches if .gz file is found after -t, set default frame
+                    frames=1
+                    ;;
+                *)          # Default case for no specified reading frame(s)
+                    printf "Warning: Invalid argument for '--translate' (ignored): %s\n" "$2" >&2
+                    frames=1
+                    shift
+                    ;;
+            esac
+            ;;
+        -r|--reference)     # Executes code to filter translated sequences using a reference sequence, takes required argument
+            case "$2" in
+                *.fa|*.fasta)
+                    reference=true
+                    ref_seq="$2"
+                    shift
+                    ;;
+                *.fq|*.fastq)
+                    reference=true
+                    ref_seq="$2"
+                    shift
+                    ;;
+                -?*)       # Matches if option is found after -r
+                    printf "Warning: An argument is required for '--reference' \n" >&2
+                    ;;
+                *.gz)      # Matches if .gz file is found after -r
+                    printf "Warning: An argument is required for '--reference' \n" >&2
+                    ;;
+                *)         # Default case: matches if uexpected file type is found
+                    printf "Warning: Argument for '--reference' must be in .fa/.fasta or .fq/fastq file format (ignored) \n" >&2
+                    shift
+                    ;;
+            esac
+            ;;
+        -v|--variable)
+            variable=true
+            case "$2" in
+                x|X)
+                    var_file_type="$2"
+                    shift
+                    ;;
+                f|F)
+                    var_file_type="$2"
+                    shift
+                    ;;
+                -?*)
+                    var_file_type=F
+                    ;;
+                *.gz)
+                    var_file_type=F
+                    ;;
+                *)
+                    var_file_type=F
+                    printf "Warning: Invalid argument (ignored): %s\n" "$2" >&2
+                    shift
+                    ;;
+            esac
+            ;;
+        -o|--output_dir)           # Should also be set to true when -t, -v, -m, -l are used
+            output_dir=true
+            case "$2" in
+                -?*)
+                    printf "Warning: No name privided for '--output_dir' (ignored) \n" >&2
+                    ;;
+                *.gz)
+                    printf "Warning: No name privided for '--output_dir' (ignored) \n" >&2
+                    ;;
+                  *)
+                    dir_name="$2"   # Make if statement to check if variable exists.. otherwise use default name
+                    shift
+                    ;;
+            esac
+            ;;
+        --)                # End of all options
+            shift
+            break
+            ;;
+        -?*)
+            printf 'Warning: Unkown option (ignored): %s\n' "$1" >&2
+            ;;
+        *)                 # Default case: No remaining options, break loop
+            break
+    esac
+
+    shift
+done
 
 # Check if there are 2 input files
 if [ "$#" -ne 2 ]; then
