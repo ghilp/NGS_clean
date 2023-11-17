@@ -42,7 +42,8 @@ show_help() {
     echo "Two paths to fastq.gz files are expected as arguments: one for the forward reads and one for the reverse reads. The path"
     echo "to the forward reads (filename with R1) should be first while the path to the reverse reads (filename with R2) should be second."
     echo
-    echo "The '--translate' option allows files to be generated containing protein sequences for specified reading frames without filtering."
+    echo "The input DNA sequences are translated and the data is cleaned to isolate relevant protein sequences. The '--translate' option"
+    echo "creates a file containing these amino acid sequences while checking for duplicates and providing a frequency sttistic."
     echo
     echo "By using the other available options and providing a reference sequence, additional analysis can be performed such as residue"
     echo "enrichment heatmaps and length distibution historgams."
