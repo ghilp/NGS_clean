@@ -178,13 +178,13 @@ while [ : ]; do
                     shift
                     ;;
                 -?*)
-                    var_file_type=F
+                    var_file_type=X
                     ;;
                 *.gz)
-                    var_file_type=F
+                    var_file_type=X
                     ;;
                 *)
-                    var_file_type=F
+                    var_file_type=X
                     printf "Warning: Invalid argument (ignored): %s\n" "$2" >&2
                     shift
                     ;;
