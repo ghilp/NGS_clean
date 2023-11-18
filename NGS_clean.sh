@@ -82,7 +82,6 @@ show_help() {
 # Function to print to stderr
 die() {
     printf '%s\n' "$1" >&2
-    exit 1
 }
 
 # Enable extended globbing
