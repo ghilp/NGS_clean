@@ -292,11 +292,8 @@ if [ "$output_dir" == true ]; then
     dir_count=1
     # Set the name for the output directory if not specified
     echo "Insert directory code here"
-    if [[ -v dir_name ]]; then
-        echo "Your directory is called $dir_name"
-    else
+    if [[ ! -v dir_name ]]; then
         dir_name="${forward_reads_filename}_analysis"
-        echo "Your directory is called $dir_name"
     fi
     # Check if directory by assigned name exsists
     if [ ! -d "$dir_name" ]; then
