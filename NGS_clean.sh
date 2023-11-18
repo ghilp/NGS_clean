@@ -287,16 +287,60 @@ echo
 
 # Options
 
+# Check if -o is present and execute associated code
+if [ "$output_dir" == true ]; then
+    # Insert output directory code here
+    echo "Insert directory code here"
+fi
+
+# Check if -r is present and execute associated code
+if [ "$reference" == true ]; then
+    # Insert reference code here
+    echo "Insert reference code here"
+fi
+
+# Check if -t is present and execute associated code
+if [ "$translate" == true ]; then
+    # Check if $reference is true
+    if [ "$reference" == true ]; then
+        # Insert translate code here
+        echo "Insert translate code here"
+    else
+        die "Error: '--translate' requires a reference sequence."
+    fi
+fi
+
+# Check if -v is present and execute associated code
+if [ "$variable" == true ]; then
+    # Check if $reference is true
+    if [ "$reference" == true ]; then
+        # Insert variable code here
+        echo "Insert variable code here"
+    else
+        die "Error: '--variable' requires a reference sequence."
+    fi
+fi
+
 # Check if -h is present and execute associated code
 if [ "$heatmap" == true ]; then
-    # Insert heatmap code here
-    echo "Insert heatmap code here"
+    # Check if $reference is true
+    if [ "$reference" == true ]; then
+        # Insert heatmap code here
+        echo "Insert heatmap code here"
+    else
+        die "Error: '--heatmap' requires a reference sequence."
+    fi
 fi
 
 # Check if -l is present and execute associated code
 if [ "$length_dist" == true ]; then
-    # Insert histogram code here
-    echo "Insert histogram code here"
+    # Check if reference is true
+    if [ "$reference" == true ]; then
+        # Insert histogram code here
+        echo "Insert histogram code here"
+    else
+        die "Error: '--length_dist' requires a reference sequence."
+    fi
 fi
 
 # Rest of script
