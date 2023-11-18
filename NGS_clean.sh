@@ -291,7 +291,6 @@ if [ "$output_dir" == true ]; then
     # Initialize a directory count variable
     dir_count=1
     # Set the name for the output directory if not specified
-    echo "Insert directory code here"
     if [[ ! -v dir_name ]]; then
         dir_name="${forward_reads_filename}_analysis"
     fi
