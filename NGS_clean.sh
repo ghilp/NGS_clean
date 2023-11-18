@@ -29,7 +29,7 @@ usage() {
     echo "  -m, --heatmap                 Generate residue enrichment heatmap for the variable region. If input files contain"
     echo "                                sequences with variable length, heatmap will only be generated for sequences with"
     echo "                                same variable region length as the reference sequence. Ouput is saved to a file named "
-    echp "                                <filename>_heatmap.pdf in the output directory. Must be used with '--reference'"
+    echo "                                <filename>_heatmap.pdf in the output directory. Must be used with '--reference'"
     echo "  -l, --length_dist             Generate histogram of the variable region length distribution and save to a file named"
     echo "                                <filename>_histogram.pdf in the output directory. Must be used with '--reference'"
     echo
@@ -71,7 +71,7 @@ show_help() {
     echo "  -m, --heatmap                 Generate residue enrichment heatmap for the variable region. If input files contain"
     echo "                                sequences with variable length, heatmap will only be generated for sequences with"
     echo "                                same variable region length as the reference sequence. Ouput is saved to a file named "
-    echp "                                <filename>_heatmap.pdf in the output directory. Must be used with '--reference'"
+    echo "                                <filename>_heatmap.pdf in the output directory. Must be used with '--reference'"
     echo "  -l, --length_dist             Generate histogram of the variable region length distribution and save to a file named"
     echo "                                <filename>_histogram.pdf in the output directory. Must be used with '--reference'"
     echo
