@@ -38,6 +38,7 @@ usage() {
 
 # Function to display script help message
 show_help() {
+    echo
     echo "This script provides basic statistics on Next-Generation Sequencing (NGS) data generated from site-directed mutagenesis "
     echo "libraries. These stats include the total number of sequences, the average length of the sequences, and more. Sequences"
     echo "with unidentified nucleotides are removed from the dataset. Sequences are translated and those with stop codons and"
