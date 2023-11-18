@@ -286,6 +286,11 @@ echo
 
 # Options
 
+# Create directory if option that generates a file is chosen
+if [ "$translate" == true ] || [ "$variable" == true ] || [ "$heatmap" == true ] || [ "$length_dist" == true ]; then
+    output_dir=true
+fi
+
 # Check if -o is present and execute associated code
 if [ "$output_dir" == true ]; then
     # Initialize a directory count variable
