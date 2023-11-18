@@ -288,8 +288,27 @@ echo
 
 # Check if -o is present and execute associated code
 if [ "$output_dir" == true ]; then
-    # Insert output directory code here
+    # Initialize a directory count variable
+    dir_count=1
+    # Set the name for the output directory if not specified
     echo "Insert directory code here"
+    if [[ -v dir_name ]]; then
+        echo "Your directory is called $dir_name"
+    else
+        dir_name="${forward_reads_filename}_analysis"
+        echo "Your directory is called $dir_name"
+    fi
+    # Check if directory by assigned name exsists
+    if [ ! -d "$dir_name" ]; then
+        mkdir "$dir_name"
+    else
+        # Increment directory count until available name is found
+        while [ -d "${dir_name}(${dir_count})" ]; do
+            ((dir_count++))
+        done
+        dir_name="${dir_name}(${dir_count})"
+        mkdir "$dir_name"
+    fi
 fi
 
 # Check if -r is present and execute associated code
