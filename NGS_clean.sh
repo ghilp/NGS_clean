@@ -12,22 +12,26 @@ print_separator() {
 
 # Function to display script usage
 usage() {
-    echo "Usage: bash $0 [-h] [-o dir_name] [-t F|X] [-v F|X] [-r <file>] [-m] [-l] <file1> <file2>"
+    echo "Usage: bash $0 [-h] [-o dir_name] [-r <file>] [-t F|X] [-v F|X] [-m] [-l] <file1> <file2>"
     echo
     echo "Options:"
     echo "  -h, --help                    Displays this help message"
     echo "  -o, --output_dir string       Provide a name for the output directory. Cannot begin with '-'. Default is <filename>_analysis"
+    echo "  -r, --reference string        Provide a reference FASTA/Q file to filter translated sequences by similarity"
     echo "  -t, --translate string        Creates FASTA or XLSX file named <filename>_AA_sequences containing the translated amino acid"
     echo "                                sequences generated during analysis (default XLSX). XLSX files include the number of"
-    echo "                                duplicates for each AA sequence. Specify output file type with 'F' or 'X' argument"
+    echo "                                duplicates for each AA sequence. Specify output file type with 'F' or 'X' argument."
+    echo "                                Must be used with '--reference' to filter out sequences in undesired reading frames"
     echo "  -v, --variable string         Generate FASTA or XLSX file named <filename>_variable_region containing isolated variable"
     echo "                                region sequences (default XLSX). Specify output file type with 'F' or 'X' argument. Using 'X'"
-    echo "                                with '-t X' will add sequences to <filename>_AA_sequences.xlsx instead of creating a new file"
-    echo "  -r, --reference string        Provide a reference FASTA/Q file to further filter translated sequences by similarity"
+    echo "                                with '-t X' will add sequences to <filename>_AA_sequences.xlsx instead of creating a new file."
+    echo "                                Must be used with '--reference' to filter out sequences in undesired reading frames"
     echo "  -m, --heatmap                 Generate residue enrichment heatmap for the variable region. If input files contain"
     echo "                                sequences with variable length, heatmap will only be generated for sequences with"
-    echo "                                same variable region length as the reference sequence. Ouput to <filename>_heatmap.pdf "
-    echo "  -l, --length_dist             Generate histogram of the variable region length distribution to <filename>_histogram.pdf"
+    echo "                                same variable region length as the reference sequence. Ouput is saved to a file named "
+    echp "                                <filename>_heatmap.pdf in the output directory. Must be used with '--reference'"
+    echo "  -l, --length_dist             Generate histogram of the variable region length distribution and save to a file named"
+    echo "                                <filename>_histogram.pdf in the output directory. Must be used with '--reference'"
     echo
     exit 1
 }
@@ -50,22 +54,26 @@ show_help() {
     echo
     echo "If an option is selected that generates a file, a directory titled <filename>_analysis will be created to store the generated file(s)."
     echo
-    echo "Usage: bash $0 [-h] [-o dir_name] [-t F|X] [-v F|X] [-r <file>] [-m] [-l] <file1> <file2>"
+    echo "Usage: bash $0 [-h] [-o dir_name] [-r <file>] [-t F|X] [-v F|X] [-m] [-l] <file1> <file2>"
     echo
     echo "Options:"
     echo "  -h, --help                    Displays this help message"
     echo "  -o, --output_dir string       Provide a name for the output directory. Cannot begin with '-'. Default is <filename>_analysis"
+    echo "  -r, --reference string        Provide a reference FASTA/Q file to filter translated sequences by similarity"
     echo "  -t, --translate string        Creates FASTA or XLSX file named <filename>_AA_sequences containing the translated amino acid"
     echo "                                sequences generated during analysis (default XLSX). XLSX files include the number of"
-    echo "                                duplicates for each AA sequence. Specify output file type with 'F' or 'X' argument"
+    echo "                                duplicates for each AA sequence. Specify output file type with 'F' or 'X' argument."
+    echo "                                Must be used with '--reference' to filter out sequences in undesired reading frames"
     echo "  -v, --variable string         Generate FASTA or XLSX file named <filename>_variable_region containing isolated variable"
     echo "                                region sequences (default XLSX). Specify output file type with 'F' or 'X' argument. Using 'X'"
-    echo "                                with '-t X' will add sequences to <filename>_AA_sequences.xlsx instead of creating a new file"
-    echo "  -r, --reference string        Provide a reference FASTA/Q file to further filter translated sequences by similarity"
+    echo "                                with '-t X' will add sequences to <filename>_AA_sequences.xlsx instead of creating a new file."
+    echo "                                Must be used with '--reference' to filter out sequences in undesired reading frames"
     echo "  -m, --heatmap                 Generate residue enrichment heatmap for the variable region. If input files contain"
     echo "                                sequences with variable length, heatmap will only be generated for sequences with"
-    echo "                                same variable region length as the reference sequence. Ouput to <filename>_heatmap.pdf "
-    echo "  -l, --length_dist             Generate histogram of the variable region length distribution to <filename>_histogram.pdf"
+    echo "                                same variable region length as the reference sequence. Ouput is saved to a file named "
+    echp "                                <filename>_heatmap.pdf in the output directory. Must be used with '--reference'"
+    echo "  -l, --length_dist             Generate histogram of the variable region length distribution and save to a file named"
+    echo "                                <filename>_histogram.pdf in the output directory. Must be used with '--reference'"
     echo
     exit 1
 }
